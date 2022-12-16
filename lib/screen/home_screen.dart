@@ -19,13 +19,30 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: renderAppBar(),
-      body: Column(
-        children: [
-          CustomGoogleMap(
-            initialPosition: initialPosition,
-          ),
-          _CheckCommutingButton(),
-        ],
+      body: FutureBuilder(
+        future: checkPermission(), //Future가 반환하는 값이 바뀔 때마다 다시 그림
+        builder: ((context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+
+          if (snapshot.data == '위치 권한이 허가되었습니다.') {
+            return Column(
+              children: [
+                CustomGoogleMap(
+                  initialPosition: initialPosition,
+                ),
+                _CheckCommutingButton(),
+              ],
+            );
+          }
+
+          return Center(
+            child: Text(snapshot.data!),
+          );
+        }),
       ),
     );
   }
@@ -50,7 +67,7 @@ class HomeScreen extends StatelessWidget {
       return '앱의 위치 권한을 세팅에서 허가해주세요.';
     }
 
-    return '위치 권한을 허가되었습니다.';
+    return '위치 권한이 허가되었습니다.';
   }
 
   AppBar renderAppBar() {

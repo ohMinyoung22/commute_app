@@ -8,6 +8,16 @@ class HomeScreen extends StatelessWidget {
     37.5233273,
     126.921252,
   );
+  static final double distance = 100;
+  static final Circle circle = Circle(
+    circleId: CircleId('circle'),
+    center: companyLatLng,
+    fillColor: Colors.amber.withOpacity(0.4),
+    radius: distance,
+    strokeColor: Colors.amber,
+    strokeWidth: 1,
+  );
+
   static final CameraPosition initialPosition = CameraPosition(
     target: companyLatLng,
     zoom: 15,
@@ -32,6 +42,7 @@ class HomeScreen extends StatelessWidget {
             return Column(
               children: [
                 CustomGoogleMap(
+                  circle: circle,
                   initialPosition: initialPosition,
                 ),
                 _CheckCommutingButton(),
@@ -85,11 +96,13 @@ class HomeScreen extends StatelessWidget {
 }
 
 class CustomGoogleMap extends StatelessWidget {
+  final Circle circle;
   final CameraPosition initialPosition;
 
   const CustomGoogleMap({
     super.key,
     required this.initialPosition,
+    required this.circle,
   });
 
   @override
@@ -97,6 +110,9 @@ class CustomGoogleMap extends StatelessWidget {
     return Expanded(
       flex: 4,
       child: GoogleMap(
+        circles: {circle},
+        myLocationEnabled: true,
+        myLocationButtonEnabled: false,
         mapType: MapType.normal,
         initialCameraPosition: initialPosition,
       ),

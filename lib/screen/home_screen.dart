@@ -9,13 +9,36 @@ class HomeScreen extends StatelessWidget {
     126.921252,
   );
   static final double distance = 100;
-  static final Circle circle = Circle(
+  static final Circle withinDistanceCircle = Circle(
     circleId: CircleId('circle'),
     center: companyLatLng,
-    fillColor: Colors.amber.withOpacity(0.4),
+    fillColor: Colors.blue.withOpacity(0.4),
     radius: distance,
-    strokeColor: Colors.amber,
+    strokeColor: Colors.blue,
     strokeWidth: 1,
+  );
+
+  static final Circle notWithinDistanceCircle = Circle(
+    circleId: CircleId('notWithinDistanceCircle'),
+    center: companyLatLng,
+    fillColor: Colors.red.withOpacity(0.4),
+    radius: distance,
+    strokeColor: Colors.red,
+    strokeWidth: 1,
+  );
+
+  static final Circle checkDoneCircle = Circle(
+    circleId: CircleId('checkDoneCircle'),
+    center: companyLatLng,
+    fillColor: Colors.green.withOpacity(0.4),
+    radius: distance,
+    strokeColor: Colors.green,
+    strokeWidth: 1,
+  );
+
+  static final Marker marker = Marker(
+    markerId: MarkerId('marker'),
+    position: companyLatLng,
   );
 
   static final CameraPosition initialPosition = CameraPosition(
@@ -42,7 +65,8 @@ class HomeScreen extends StatelessWidget {
             return Column(
               children: [
                 CustomGoogleMap(
-                  circle: circle,
+                  circle: withinDistanceCircle,
+                  marker: marker,
                   initialPosition: initialPosition,
                 ),
                 _CheckCommutingButton(),
@@ -98,11 +122,13 @@ class HomeScreen extends StatelessWidget {
 class CustomGoogleMap extends StatelessWidget {
   final Circle circle;
   final CameraPosition initialPosition;
+  final Marker marker;
 
   const CustomGoogleMap({
     super.key,
     required this.initialPosition,
     required this.circle,
+    required this.marker,
   });
 
   @override
@@ -111,6 +137,7 @@ class CustomGoogleMap extends StatelessWidget {
       flex: 4,
       child: GoogleMap(
         circles: {circle},
+        markers: {marker},
         myLocationEnabled: true,
         myLocationButtonEnabled: false,
         mapType: MapType.normal,
